@@ -80,7 +80,7 @@ def load_session():
             return json.load(file)
     except FileNotFoundError:
         print("Error: Last session not found. A new session file will be made when exited.")
-        return []
+        return 0
 
 def save_session(data):
     """Saves the session data to a file."""
