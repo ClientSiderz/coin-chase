@@ -157,13 +157,13 @@ def main_character_movement():
     keys = pygame.key.get_pressed()
     move_dir = pygame.Vector2(0, 0)
 
-    if keys[pygame.K_w]:
+    if keys[pygame.K_w] | keys[pygame.K_UP]:
         move_dir.y -= 1
-    if keys[pygame.K_s]:
+    if keys[pygame.K_s] | keys[pygame.K_DOWN]:
         move_dir.y += 1
-    if keys[pygame.K_a]:
+    if keys[pygame.K_a] | keys[pygame.K_LEFT]:
         move_dir.x -= 1
-    if keys[pygame.K_d]:
+    if keys[pygame.K_d] | keys[pygame.K_RIGHT]:
         move_dir.x += 1
 
     # Normalize diagonal movement
