@@ -4,6 +4,8 @@ import random
 import json
 import os
 
+from pygame.locals import *
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -12,6 +14,7 @@ running = True
 game_over = False
 
 font = pygame.font.Font(None, 36)
+small_font = pygame.font.Font(None, 30)
 
 character = pygame.image.load('assets/character.png')
 character = pygame.transform.scale(character, (128, 128))
@@ -56,7 +59,6 @@ class Bomb(pygame.sprite.Sprite):
             self.kill()
 
 all_coins = pygame.sprite.Group()
-
 all_bombs = pygame.sprite.Group()
 
 dt = 0
@@ -72,6 +74,9 @@ grass = pygame.image.load('assets/grass_field.png')
 grass = pygame.transform.scale(grass, (window_width, window_height))
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+player_health = 10
+player_max_health = 10
 
 def load_session():
     """Loads the session data from a file."""
@@ -119,10 +124,21 @@ def render_game():
     
     boost_indicator = font.render("Press SPACE to Boost", True, (255, 255, 255))
     if not space_bar_key_held:
-        screen.blit(boost_indicator, (10, screen.get_height() - 30))
+        screen.blit(boost_indicator, (10, screen.get_height() - 70))
+        
+healthRectOverlay = Rect(10, screen.get_height() - 35, 300, 25)
+def render_health_bar():
+    health_text = small_font.render(f"{player_health} / {player_max_health}", True, (0, 0, 0))
+    
+    healthRect = Rect(12, screen.get_height() - 33, (player_health / player_max_health) * 296, 21)
+    pygame.draw.rect(screen, (54, 89, 51), healthRectOverlay)
+    pygame.draw.rect(screen, (0, 255, 0), healthRect)
+    
+    screen.blit(health_text, (15, screen.get_height() - 31))
+    
     
 def collisions():
-    global coins_collected, game_over
+    global coins_collected, game_over, player_health
     # Check for coin collisions
     player_rect = pygame.Rect(player_pos.x - character_width / 2, player_pos.y - character_height / 2, character_width, character_height)
     for coin in all_coins:
@@ -132,7 +148,9 @@ def collisions():
             
     for bomb in all_bombs:
         if player_rect.colliderect(bomb.rect):
-            game_over = True
+            # game_over = True
+            player_health -= 1
+            bomb.kill()
             break
 
 def spawn_obsticles():
@@ -206,7 +224,12 @@ while running:
         
         render_game()
         
+        render_health_bar()
+        
         main_character_movement()
+        
+        if player_health <= 0:
+            game_over = True
     else:
         render_game_over()
 
@@ -224,6 +247,8 @@ while running:
             
             all_coins.empty()
             all_bombs.empty()
+            
+            player_health = player_max_health
             
             game_over = False
             
