@@ -1,4 +1,5 @@
 # Example file showing a circle moving on screen
+import colorsys
 import pygame
 import random
 import json
@@ -125,6 +126,19 @@ def render_game():
     boost_indicator = font.render("Press SPACE to Boost", True, (255, 255, 255))
     if not space_bar_key_held:
         screen.blit(boost_indicator, (10, screen.get_height() - 70))
+
+def get_color_from_percentage(percentage):
+    percentage = max(0, min(100, percentage))
+
+    hue = (percentage / 100.0) / 3.0
+    
+    rgb_float = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+
+    red = int(rgb_float[0] * 255)
+    green = int(rgb_float[1] * 255)
+    blue = int(rgb_float[2] * 255)
+
+    return (red, green, blue)
         
 healthRectOverlay = Rect(10, screen.get_height() - 35, 300, 25)
 def render_health_bar():
@@ -132,7 +146,7 @@ def render_health_bar():
     
     healthRect = Rect(12, screen.get_height() - 33, (player_health / player_max_health) * 296, 21)
     pygame.draw.rect(screen, (54, 89, 51), healthRectOverlay)
-    pygame.draw.rect(screen, (0, 255, 0), healthRect)
+    pygame.draw.rect(screen, get_color_from_percentage((player_health / player_max_health) * 100), healthRect)
     
     screen.blit(health_text, (15, screen.get_height() - 31))
     
