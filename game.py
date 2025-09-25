@@ -79,6 +79,8 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 player_health = 10
 player_max_health = 10
 
+player_hurt_time = 0
+
 def load_session():
     """Loads the session data from a file."""
     try:
@@ -142,7 +144,7 @@ def get_color_from_percentage(percentage):
         
 healthRectOverlay = Rect(10, screen.get_height() - 35, 300, 25)
 def render_health_bar():
-    health_text = small_font.render(f"{player_health} / {player_max_health}", True, (0, 0, 0))
+    health_text = small_font.render(f"{player_health} / {player_max_health}", True, (player_hurt_time, 0, 0))
     
     healthRect = Rect(12, screen.get_height() - 33, (player_health / player_max_health) * 296, 21)
     pygame.draw.rect(screen, (54, 89, 51), healthRectOverlay)
@@ -152,7 +154,7 @@ def render_health_bar():
     
     
 def collisions():
-    global coins_collected, game_over, player_health
+    global coins_collected, game_over, player_health, player_hurt_time
     # Check for coin collisions
     player_rect = pygame.Rect(player_pos.x - character_width / 2, player_pos.y - character_height / 2, character_width, character_height)
     for coin in all_coins:
@@ -163,6 +165,7 @@ def collisions():
     for bomb in all_bombs:
         if player_rect.colliderect(bomb.rect):
             # game_over = True
+            player_hurt_time = 222
             player_health -= 1
             bomb.kill()
             break
@@ -273,5 +276,7 @@ while running:
 
     pygame.display.flip()
     dt = clock.tick(60) / 1000
+    if player_hurt_time > 0:
+        player_hurt_time -= 2
 
 pygame.quit()
