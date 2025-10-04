@@ -9,7 +9,10 @@ from pygame.locals import *
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+display_info = pygame.display.Info()
+native_width, native_height = display_info.current_w, display_info.current_h
+
+screen = pygame.display.set_mode((native_width, native_height), (pygame.FULLSCREEN | pygame.DOUBLEBUF))
 clock = pygame.time.Clock()
 running = True
 game_over = False
