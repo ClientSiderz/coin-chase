@@ -9,7 +9,7 @@ def render_game(character, player_pos, all_coins, all_bombs, coins_collected, re
     SCREEN.blit(character, (player_pos.x - 64, player_pos.y - 64))
 
     # Score & record
-    SCREEN.blit(FONT.render(f"coins: {coins_collected}", True, (255, 255, 255)), (10, 40))
+    SCREEN.blit(FONT.render(f"coins: {coins_collected}", True, (255, 255, 255)), (10, 40 if record else 10))
     if record:
         SCREEN.blit(FONT.render(f"record: {record}", True, (255, 255, 255)), (10, 10))
 
